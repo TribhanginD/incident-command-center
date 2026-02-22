@@ -1,32 +1,27 @@
-# 🛡️ Incident Command Center (ICC)
-> **Modern Engineering Dashboard for Real-Time Mission Control**
+# Incident Command Center
+Engineering dashboard for real-time mission control.
 
-![Status](https://img.shields.io/badge/Status-Production--Ready-success)
-![Stack](https://img.shields.io/badge/Stack-React%20%7C%20FastAPI%20%7C%20Kafka-blue)
+## Overview
+A system for monitoring system health, managing incidents, and coordinating deployments. Includes a dashboard UI with real-time data streaming and role-based access control.
 
-A high-fidelity dashboard built for engineering teams to monitor system health, manage incidents, and coordinate deployments in real-time. Features a stunning **Glassmorphic UI** and enterprise-grade security.
+## Key Features
+- Real-Time Streaming: Live metric charts (CPU, Latency, Error Rate) via WebSockets and Kafka.
+- Authentication: JWT-based authentication with Role-Based Access Control (Admin and Engineer).
+- Incident Management: CRUD operations for incidents and P0 escalation workflow.
+- Deployment Tracking: History of production deployments.
 
-## ✨ Key Features
-- **📡 Real-Time Streaming**: Live metric charts (CPU, Latency, Error Rate) powered by WebSockets and a background Kafka simulation.
-- **🛡️ RBAC & Security**: JWT-based authentication with Role-Based Access Control (Admin vs. Engineer).
-- **🚨 Incident Handling**: Full CRUD for incidents with a dedicated "Escalate to P0" workflow.
-- **🚀 Deployment Tracking**: History of production deployments with developer attribution.
+## Tech Stack
+- Frontend: React 18, TypeScript, Vite, Tailwind CSS, Recharts, Zustand.
+- Backend: FastAPI, WebSocket Server, SQLAlchemy.
+- Infrastructure: PostgreSQL, Redis, Kafka, Zookeeper.
+- Ops: Docker Compose with healthchecks and automated data seeding.
 
-## 🛠️ Tech Stack
-- **Frontend**: React 18, TypeScript, Vite, Tailwind CSS, Recharts, Zustand.
-- **Backend**: FastAPI (Python), WebSocket Server, SQLAlchemy.
-- **Infrastructure**: PostgreSQL, Redis (Caching), Kafka + Zookeeper (Event Bus).
-- **Ops**: Docker Compose, Healthchecks, Automated Data Seeding.
-
-## 🏁 Getting Started
-1. **Clone & Spin Up**:
+## Setup
+1. Start services:
    ```bash
    docker-compose up --build -d
    ```
-2. **Access Dashboard**: `http://localhost:5173`
-3. **Credentials**: 
-   - User: `admin` | Pass: `admin` (Administrator)
-   - User: `engineer` | Pass: `engineer` (Standard User)
-
----
-*Created as part of a Production Engineering Portfolio series.*
+2. Dashboard Access: `http://localhost:5173`
+3. Credentials:
+   - Admin: `admin` / `admin`
+   - Engineer: `engineer` / `engineer`
