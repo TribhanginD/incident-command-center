@@ -5,7 +5,8 @@ export const useMetricsWS = () => {
     const addMetric = useMetricsStore((state) => state.addMetric);
 
     useEffect(() => {
-        const ws = new WebSocket('ws://localhost:8000/ws/metrics');
+        const wsUrl = import.meta.env.VITE_WS_URL || 'ws://localhost:8000/ws/metrics';
+        const ws = new WebSocket(wsUrl);
 
         ws.onmessage = (event) => {
             try {

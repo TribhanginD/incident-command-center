@@ -13,7 +13,8 @@ export const Login: React.FC = () => {
         e.preventDefault();
         setError('');
         try {
-            const response = await axios.post('http://localhost:8000/auth/token',
+            const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+            const response = await axios.post(`${apiUrl}/auth/token`,
                 new URLSearchParams({ username, password }),
                 { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }
             );
