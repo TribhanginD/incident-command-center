@@ -10,6 +10,7 @@ load_dotenv()
 KAFKA_BROKER = os.getenv("KAFKA_BOOTSTRAP_SERVERS", "kafka:9092")
 KAFKA_USERNAME = os.getenv("KAFKA_USERNAME")
 KAFKA_PASSWORD = os.getenv("KAFKA_PASSWORD")
+KAFKA_CA_CERT = os.getenv("KAFKA_CA_CERT")
 
 def get_producer():
     kafka_config = {
@@ -24,6 +25,12 @@ def get_producer():
             "sasl_plain_username": KAFKA_USERNAME,
             "sasl_plain_password": KAFKA_PASSWORD
         })
+        
+        if KAFKA_CA_CERT:
+            ca_path = "/tmp/ca.pem"
+            with open(ca_path, "w") as f:
+                f.write(KAFKA_CA_CERT)
+            kafka_config["ssl_cafile"] = ca_path
         
     try:
         return KafkaProducer(**kafka_config)
