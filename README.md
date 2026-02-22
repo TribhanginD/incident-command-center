@@ -1,19 +1,32 @@
-# Incident Command Center
+# 🛡️ Incident Command Center (ICC)
+> **Modern Engineering Dashboard for Real-Time Mission Control**
 
-Real-time engineering incident dashboard.
+![Status](https://img.shields.io/badge/Status-Production--Ready-success)
+![Stack](https://img.shields.io/badge/Stack-React%20%7C%20FastAPI%20%7C%20Kafka-blue)
 
-## Features
-- **Live Metrics**: WebSocket-streamed system health data.
-- **Incident Management**: CRUD for incidents with RBAC.
-- **Manual Escalation**: P0 escalation with audit trail.
-- **Deployment Logs**: Real-time deployment history.
+A high-fidelity dashboard built for engineering teams to monitor system health, manage incidents, and coordinate deployments in real-time. Features a stunning **Glassmorphic UI** and enterprise-grade security.
 
-## Architecture
-- **Frontend**: React, TypeScript, Vite, Recharts, Zustand.
-- **Backend**: FastAPI, WebSockets, JWT, PostgreSQL, Redis, Kafka.
+## ✨ Key Features
+- **📡 Real-Time Streaming**: Live metric charts (CPU, Latency, Error Rate) powered by WebSockets and a background Kafka simulation.
+- **🛡️ RBAC & Security**: JWT-based authentication with Role-Based Access Control (Admin vs. Engineer).
+- **🚨 Incident Handling**: Full CRUD for incidents with a dedicated "Escalate to P0" workflow.
+- **🚀 Deployment Tracking**: History of production deployments with developer attribution.
 
-## Getting Started
-```bash
-docker-compose up --build
-```
-Access the dashboard at `http://localhost:5173` (Admin: `admin`/`admin`).
+## 🛠️ Tech Stack
+- **Frontend**: React 18, TypeScript, Vite, Tailwind CSS, Recharts, Zustand.
+- **Backend**: FastAPI (Python), WebSocket Server, SQLAlchemy.
+- **Infrastructure**: PostgreSQL, Redis (Caching), Kafka + Zookeeper (Event Bus).
+- **Ops**: Docker Compose, Healthchecks, Automated Data Seeding.
+
+## 🏁 Getting Started
+1. **Clone & Spin Up**:
+   ```bash
+   docker-compose up --build -d
+   ```
+2. **Access Dashboard**: `http://localhost:5173`
+3. **Credentials**: 
+   - User: `admin` | Pass: `admin` (Administrator)
+   - User: `engineer` | Pass: `engineer` (Standard User)
+
+---
+*Created as part of a Production Engineering Portfolio series.*
