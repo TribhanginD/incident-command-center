@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.env
+.venv
+venv/
+env/
+dist/
+build/
+*.bak
+*.swp
+
+# Node
+node_modules/
+dist-ssr
+*.local
+
+# Docker
+.dockerignore
+/postgres_data/
+
+# IDE
+.vscode/
+.idea/
+.DS_Store
