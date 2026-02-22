@@ -11,14 +11,16 @@ DATABASE_URL = os.getenv("DATABASE_URL")
 ENVIRONMENT = os.getenv("ENVIRONMENT")
 IS_HF = os.getenv("SPACE_ID") is not None or os.getenv("HF_SPACE_ID") is not None
 
+# Diagnostic: List all env keys (names only for security)
+print(f"DEBUG: IS_HF={IS_HF}, ENVIRONMENT={ENVIRONMENT}")
+print(f"DEBUG: Available Env Keys: {sorted(os.environ.keys())}")
+
 if DATABASE_URL:
     print(f"DEBUG: Found DATABASE_URL starting with: {DATABASE_URL[:15]}...")
 else:
-    print(f"DEBUG: DATABASE_URL not found in environment! (IS_HF={IS_HF})")
-
-if not DATABASE_URL:
     # If we are in Hugging Face or production, we MUST have a DATABASE_URL
     if ENVIRONMENT == "production" or IS_HF:
+        print("ERROR: DATABASE_URL missing while in Cloud/Production mode!")
         raise ValueError("CRITICAL: DATABASE_URL is missing in cloud environment. Check your HF Secrets!")
     
     print("DEBUG: Using local 'db' fallback (Development mode)")
