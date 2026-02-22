@@ -9,20 +9,23 @@ load_dotenv()
 # Prioritize ENVIRONMENT secret, fallback to local only if explicitly in development
 DATABASE_URL = os.getenv("DATABASE_URL")
 ENVIRONMENT = os.getenv("ENVIRONMENT")
+IS_HF = os.getenv("SPACE_ID") is not None or os.getenv("HF_SPACE_ID") is not None
 
 if DATABASE_URL:
     print(f"DEBUG: Found DATABASE_URL starting with: {DATABASE_URL[:15]}...")
 else:
-    print("DEBUG: DATABASE_URL not found in environment!")
+    print(f"DEBUG: DATABASE_URL not found in environment! (IS_HF={IS_HF})")
 
 if not DATABASE_URL:
-    if ENVIRONMENT == "production":
-        raise ValueError("CRITICAL: DATABASE_URL is not set in production!")
+    # If we are in Hugging Face or production, we MUST have a DATABASE_URL
+    if ENVIRONMENT == "production" or IS_HF:
+        raise ValueError("CRITICAL: DATABASE_URL is missing in cloud environment. Check your HF Secrets!")
+    
     print("DEBUG: Using local 'db' fallback (Development mode)")
     DATABASE_URL = "postgresql://postgres:postgres@db:5432/incident_db"
 
-if "db:5432" in DATABASE_URL and ENVIRONMENT == "production":
-    raise ValueError("CRITICAL: Local 'db' host detected while in production mode! Check your secrets.")
+if "db:5432" in DATABASE_URL and (ENVIRONMENT == "production" or IS_HF):
+    raise ValueError("CRITICAL: Local 'db' host detected in cloud! Check your DATABASE_URL secret.")
 
 SQLALCHEMY_DATABASE_URL = DATABASE_URL
 
