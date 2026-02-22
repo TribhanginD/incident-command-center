@@ -8,13 +8,25 @@ from dotenv import load_dotenv
 load_dotenv()
 
 KAFKA_BROKER = os.getenv("KAFKA_BOOTSTRAP_SERVERS", "kafka:9092")
+KAFKA_USERNAME = os.getenv("KAFKA_USERNAME")
+KAFKA_PASSWORD = os.getenv("KAFKA_PASSWORD")
 
 def get_producer():
+    kafka_config = {
+        "bootstrap_servers": [KAFKA_BROKER],
+        "value_serializer": lambda v: json.dumps(v).encode('utf-8')
+    }
+    
+    if KAFKA_USERNAME and KAFKA_PASSWORD:
+        kafka_config.update({
+            "security_protocol": "SASL_SSL",
+            "sasl_mechanism": "SCRAM-SHA-256",
+            "sasl_plain_username": KAFKA_USERNAME,
+            "sasl_plain_password": KAFKA_PASSWORD
+        })
+        
     try:
-        return KafkaProducer(
-            bootstrap_servers=[KAFKA_BROKER],
-            value_serializer=lambda v: json.dumps(v).encode('utf-8')
-        )
+        return KafkaProducer(**kafka_config)
     except Exception as e:
         print(f"Failed to connect to Kafka: {e}")
         return None
