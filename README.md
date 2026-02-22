@@ -1,6 +1,5 @@
 ---
 title: Incident Command Center
-emoji: ⚡
 colorFrom: blue
 colorTo: indigo
 sdk: docker
