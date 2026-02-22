@@ -1,3 +1,13 @@
+---
+title: Incident Command Center
+emoji: ⚡
+colorFrom: blue
+colorTo: indigo
+sdk: docker
+pinned: false
+app_port: 7860
+---
+
 # Incident Command Center
 Engineering dashboard for real-time mission control.
 
