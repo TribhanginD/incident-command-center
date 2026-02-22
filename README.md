@@ -1,6 +1,17 @@
 # Incident Command Center
 Engineering dashboard for real-time mission control.
 
+## Architecture
+```mermaid
+graph TD
+    User([User Browser]) <-->|WebSockets / REST| FE[React Frontend]
+    FE <-->|FastAPI| BE[Backend API]
+    BE <-->|Read/Write| DB[(PostgreSQL)]
+    BE <-->|Cache| RD[(Redis)]
+    P[Metric Producer] -->|Produce JSON| K{Kafka}
+    K -->|Consume| BE
+```
+
 ## Overview
 A system for monitoring system health, managing incidents, and coordinating deployments. Includes a dashboard UI with real-time data streaming and role-based access control.
 
