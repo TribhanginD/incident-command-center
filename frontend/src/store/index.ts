@@ -22,16 +22,28 @@ export const useAuthStore = create<AuthState>((set) => ({
   },
 }));
 
+interface Incident {
+  id: number;
+  title: string;
+  status: 'active' | 'investigating' | 'mitigated' | 'resolved';
+  severity: 'P0' | 'P1' | 'P2' | 'P3';
+  created_at: string;
+}
+
 interface MetricsState {
   metrics: Record<string, number[]>;
+  incidents: Incident[];
   addMetric: (name: string, value: number) => void;
+  setIncidents: (incidents: Incident[]) => void;
+  addIncident: (incident: Incident) => void;
 }
 
 export const useMetricsStore = create<MetricsState>((set) => ({
   metrics: {},
+  incidents: [],
   addMetric: (name, value) => set((state) => {
     const current = state.metrics[name] || [];
-    const next = [...current, value].slice(-20); // Keep last 20 points
+    const next = [...current, value].slice(-20);
     return {
       metrics: {
         ...state.metrics,
@@ -39,4 +51,8 @@ export const useMetricsStore = create<MetricsState>((set) => ({
       }
     };
   }),
+  setIncidents: (incidents) => set({ incidents }),
+  addIncident: (incident) => set((state) => ({
+    incidents: [incident, ...state.incidents].slice(0, 10)
+  })),
 }));

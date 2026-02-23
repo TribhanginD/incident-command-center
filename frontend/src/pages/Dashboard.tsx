@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import axios from 'axios';
 import { useMetricsStore, useAuthStore } from '../store';
 import { useMetricsWS } from '../hooks/useMetricsWS';
 import { LiveMetricChart } from '../components/LiveMetricChart';
@@ -7,8 +8,40 @@ import { Activity, Server, Zap, LogOut, Shield, Wifi } from 'lucide-react';
 
 const Dashboard: React.FC = () => {
     useMetricsWS();
-    const metrics = useMetricsStore((state) => state.metrics);
-    const { user, logout } = useAuthStore();
+    const { metrics, incidents, setIncidents } = useMetricsStore();
+    const { user, logout, token } = useAuthStore();
+
+    useEffect(() => {
+        const fetchIncidents = async () => {
+            try {
+                const res = await axios.get(`${import.meta.env.VITE_API_URL}/incidents/`, {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+                setIncidents(res.data);
+            } catch (err) {
+                console.error("Failed to fetch incidents:", err);
+            }
+        };
+
+        fetchIncidents();
+        const interval = setInterval(fetchIncidents, 30000); // Poll every 30s as fallback
+        return () => clearInterval(interval);
+    }, [token, setIncidents]);
+
+    const handleEscalate = async (id: number) => {
+        try {
+            await axios.post(`${import.meta.env.VITE_API_URL}/incidents/${id}/escalate`, {}, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            // Refresh list
+            const res = await axios.get(`${import.meta.env.VITE_API_URL}/incidents/`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            setIncidents(res.data);
+        } catch (err) {
+            console.error("Failed to escalate incident:", err);
+        }
+    };
 
     return (
         <div className="min-h-screen bg-[#020617] text-slate-200 selection:bg-indigo-500/30">
@@ -69,7 +102,7 @@ const Dashboard: React.FC = () => {
                         { label: 'System Health', value: '99.98%', sub: 'SLA Status', color: 'text-green-400', icon: Shield },
                         { label: 'P95 Latency', value: '124ms', sub: 'Stable', color: 'text-blue-400', icon: Activity },
                         { label: 'Error Rate', value: '0.04%', sub: '+0.01% / 24h', color: 'text-red-400', icon: Server },
-                        { label: 'Active Alerts', value: '0', sub: 'Zero Critical', color: 'text-indigo-400', icon: Zap },
+                        { label: 'Active Alerts', value: incidents.filter(i => i.status === 'active').length.toString(), sub: 'Live Count', color: 'text-indigo-400', icon: Zap },
                     ].map((stat, i) => (
                         <div key={i} className="glass-card p-6 group hover:border-white/20 transition-all duration-300">
                             <div className="flex justify-between items-start mb-4">
@@ -106,9 +139,9 @@ const Dashboard: React.FC = () => {
                         </div>
 
                         <IncidentList
-                            incidents={[]}
+                            incidents={incidents}
                             isAdmin={user?.role === 'admin'}
-                            onEscalate={(id) => console.log('Escalate', id)}
+                            onEscalate={handleEscalate}
                         />
                     </div>
 
@@ -140,7 +173,10 @@ const Dashboard: React.FC = () => {
                         <div className="glass-card p-6 bg-gradient-to-br from-indigo-600/10 to-transparent">
                             <h4 className="text-xs font-bold text-indigo-400 uppercase tracking-widest mb-2">System Broadcast</h4>
                             <p className="text-sm text-slate-400 leading-relaxed">
-                                All cloud regions report nominal performance. Kafka throughput is stable at 240k eps.
+                                {incidents.length > 0
+                                    ? `Alert: ${incidents[0].title} is active. Response team notified.`
+                                    : "All cloud regions report nominal performance. Kafka throughput is stable at 240k eps."
+                                }
                             </p>
                         </div>
                     </div>
