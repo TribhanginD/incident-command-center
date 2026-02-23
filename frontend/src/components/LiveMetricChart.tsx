@@ -1,4 +1,3 @@
-```
 import React from 'react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
@@ -10,7 +9,7 @@ interface Props {
 
 export const LiveMetricChart: React.FC<Props> = ({ data, title, color }) => {
     const chartData = data.map((val, i) => ({ time: i, value: val }));
-    const gradientId = `color - ${ title.replace(/\s+/g, '-') } `;
+    const gradientId = `color-${title.replace(/\s+/g, '-')}`;
 
     return (
         <div className="glass-card p-6 shadow-2xl shadow-black/20 group hover:border-white/10 transition-colors">
@@ -41,7 +40,7 @@ export const LiveMetricChart: React.FC<Props> = ({ data, title, color }) => {
                             fontSize={10}
                             tickLine={false}
                             axisLine={false}
-                            tickFormatter={(val) => `${ val } `}
+                            tickFormatter={(val) => `${val}`}
                         />
                         <Tooltip
                             contentStyle={{
@@ -59,7 +58,7 @@ export const LiveMetricChart: React.FC<Props> = ({ data, title, color }) => {
                             stroke={color}
                             strokeWidth={3}
                             fillOpacity={1}
-                            fill={`url(#${ gradientId })`}
+                            fill={`url(#${gradientId})`}
                             animationDuration={400}
                         />
                     </AreaChart>
